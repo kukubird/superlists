@@ -21,4 +21,5 @@ class HomePageTest(TestCase):
         request = HttpRequest() #this is an HttpReqiest object which is what Django will see when a user's browser asks for a page.
         response = home_page(request) #we pass it to our home page view which gives us a response
         expected_html = render_to_string('home.html')
-        self.assertEqual(response.content.decode(), expected_html)
+        self.assertEqual(response.content.decode(), expected_html) #we use the decode to covert the response. content bytes into a Python unicode string, which allows us to comapre strings with strings.
+        
