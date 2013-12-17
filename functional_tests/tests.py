@@ -1,9 +1,10 @@
 #Functional Tests let us see how the application functions from the user's point of view.
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -22,7 +23,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
         # to check out its homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # She notices the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
@@ -62,5 +63,5 @@ class NewVisitorTest(unittest.TestCase):
         # She is invited to enter a to-do item straight away
         #[...rest of comments as before]
 
-if __name__ == '__main__': #7
-    unittest.main() #8
+#if __name__ == '__main__': #7 we dont need this nay more because we'll be using the Django test runner to launch the FT
+#    unittest.main() #8
