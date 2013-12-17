@@ -20,6 +20,17 @@ class HomePageTest(TestCase):
     def test_home_page_returns_correct_html(self):
         request = HttpRequest() #this is an HttpReqiest object which is what Django will see when a user's browser asks for a page.
         response = home_page(request) #we pass it to our home page view which gives us a response
-        expected_html = render_to_string('home.html')
+        expected_html = render_to_string(
+        	'home.html',
+        	{'new_item_text': 'A new list item'}
+        	)
         self.assertEqual(response.content.decode(), expected_html) #we use the decode to covert the response. content bytes into a Python unicode string, which allows us to comapre strings with strings.
         
+    def test_home_page_can_save_a_POST_request(self):
+    	request = HttpRequest()
+    	request.method = 'POST'
+    	request.POST['item_text'] = 'A new list item'
+
+    	response = home_page(request)
+
+    	self.assertIn('A new list item', response.content.decode())
