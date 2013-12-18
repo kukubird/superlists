@@ -56,7 +56,7 @@ class NewVisitorTest(LiveServerTestCase):
         # to-do list table
         inputbox.send_keys(Keys.ENTER)
         edith_list_url = self.browser.current_url
-        self.assertRegex(edith_list_url, '/lists/.+') #assertRegex is a helper function unittest that checks whether a string matches a regular expression
+        self.assertRegexpMatches(edith_list_url, '/lists/.+') #assertRegex is a helper function unittest that checks whether a string matches a regular expression
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
         
@@ -81,7 +81,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Francis gets his own unique URL
         francis_list_url = self.browser.current_url
-        self.assertRegex(francis_list_url, '/lists/.+')
+        self.assertRegexpMatches(francis_list_url, '/lists/.+')
         self.assertNotEqual(francis_list_url, edith_list_url)
 
         # Again, there is no trace of Edith's list
