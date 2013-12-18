@@ -51,17 +51,42 @@ class NewVisitorTest(LiveServerTestCase):
         # methodical)
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Use peacock feathers to make a fly')
+        # When she hits enter, she is taken to a new URL,
+        # and now the page lists "1: Buy peacock feathers" as an item in a
+        # to-do list table
         inputbox.send_keys(Keys.ENTER)
-
-        # The page updates again, and now shows both items on her list
+        edith_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, '/lists/.+') #assertRegex is a helper function unittest that checks whether a string matches a regular expression
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
+        
+        # Now a new user, Francis, comes along to the site.
+        self.browser.quit()
+        ## We use a new browser session to make sure that no information
+        ## of Edith's is coming through from cookies etc #1
+        self.browser = webdriver.Firefox()
 
-        self.fail('Finish the test!')
+        # Francis visits the home page.  There is no sign of Edith's
+        # list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
 
-        # The page updates again, and now shows both items on her list
-        # She is invited to enter a to-do item straight away
-        #[...rest of comments as before]
+        # Francis starts a new list by entering a new item. He
+        # is less interesting than Edith...
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
 
-#if __name__ == '__main__': #7 we dont need this nay more because we'll be using the Django test runner to launch the FT
-#    unittest.main() #8
+        # Francis gets his own unique URL
+        francis_list_url = self.browser.current_url
+        self.assertRegex(francis_list_url, '/lists/.+')
+        self.assertNotEqual(francis_list_url, edith_list_url)
+
+        # Again, there is no trace of Edith's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
+
+        # Satisified, she goes back to sleep
