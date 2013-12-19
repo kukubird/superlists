@@ -89,4 +89,25 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
 
-        # Satisified, she goes back to sleep
+        # Satisified, she goes back to slee
+
+    def test_layout_and_styling(self):
+        # Edith goes to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # She notices the input box is nicely centered
+        inputbox = self.browser.find_element_by_tag_name('input')
+        self.assertAlmostEqual( #helps us to deal with rounding errors by letting us specify that we want our arithmetic to work to within 3 pixels.
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=3
+            )
+        # she starts a new list and sees the input is nicely centered to
+        inputbox.send_keys('testing\n')
+        inputbox = self.browser.find_element_by_tag_name('input')
+        self.assertAlmostEqual( #helps us to deal with rounding errors by letting us specify that we want our arithmetic to work to within 3 pixels.
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=3
+            )
